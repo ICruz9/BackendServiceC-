@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Proyecto C#\\BackendServices\\BackendServices.csproj": {}
+    "C:\\Users\\Usuario\\Desktop\\TECNICA\\BackendServiceC-\\BackendServices.csproj": {}
   },
   "projects": {
-    "E:\\Proyecto C#\\BackendServices\\BackendServices.csproj": {
+    "C:\\Users\\Usuario\\Desktop\\TECNICA\\BackendServiceC-\\BackendServices.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Proyecto C#\\BackendServices\\BackendServices.csproj",
+        "projectUniqueName": "C:\\Users\\Usuario\\Desktop\\TECNICA\\BackendServiceC-\\BackendServices.csproj",
         "projectName": "BackendServices",
-        "projectPath": "E:\\Proyecto C#\\BackendServices\\BackendServices.csproj",
+        "projectPath": "C:\\Users\\Usuario\\Desktop\\TECNICA\\BackendServiceC-\\BackendServices.csproj",
         "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
-        "outputPath": "E:\\Proyecto C#\\BackendServices\\obj\\",
+        "outputPath": "C:\\Users\\Usuario\\Desktop\\TECNICA\\BackendServiceC-\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Usuario\\AppData\\Roaming\\NuGet\\NuGet.Config",
