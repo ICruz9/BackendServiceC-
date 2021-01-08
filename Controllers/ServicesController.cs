@@ -36,13 +36,13 @@ namespace BackendServices.Controllers
             }
             return listTasks;
         }
-        [HttpGet("taskById{id}")]
-        public async Task<TaskEntity> GetTaskId(int id)
+        [HttpGet("taskByFilter{idpeople}*{state}*{priority}*{fecInicio}*{fecFinal}")]
+        public async Task<List<TaskEntity>> GetTasksFilter(int idpeople, string state, string priority, string fecInicio, string fecFinal)
         {
-            var task = await GetTask(id);
-            if (task==null)
+            var task = await GetTaskFilter(idpeople,state,priority,fecInicio,fecFinal);
+            if (task.Count < 0)
             {
-                return task;
+                return null;
             }
             return task;
         }
@@ -125,19 +125,19 @@ namespace BackendServices.Controllers
             }
             return listTasks;
         }
-        private async Task<TaskEntity> GetTask(int id)
+        private async Task<List<TaskEntity>> GetTaskFilter(int idpeople, string state, string priority, string fecInicio, string fecFinal)
         {
-            TaskEntity task = null;
+            List<TaskEntity> listTasks = new List<TaskEntity>();
             connection = new NpgsqlConnection("Server= localhost; User Id= postgres; Password= 1234; Port= 5432; Database= backendservices");
             try
             {
                 connection.Open();
-                sql = @"SELECT * from public.sp_getTasksByID("+id+")";
+                sql = @"SELECT * from public.sp_getTasksByFilter("+idpeople+",'" + state + "','"+priority+"','"+fecInicio+"','"+fecFinal+"')";
                 cmd = new NpgsqlCommand(sql, connection);
                 NpgsqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    task=new TaskEntity()
+                    listTasks.Add(new TaskEntity()
                     {
                         idTask = Int32.Parse(reader["v_idTask"].ToString()),
                         description = reader["v_description"].ToString(),
@@ -147,7 +147,7 @@ namespace BackendServices.Controllers
                         fechaInicio = reader["v_fecha_inicio"].ToString().Substring(0, 10),
                         fechaFinal = reader["v_fecha_final"].ToString().Substring(0, 10),
                         notes = reader["v_notes"].ToString()
-                    };
+                    });
                 }
                 connection.Close();
             }
@@ -155,7 +155,7 @@ namespace BackendServices.Controllers
             {
                 connection.Close();
             }
-            return task;
+            return listTasks;
         }
         private async Task<bool> updateTask(int idtask, int idpeople, string description, string state, string priority, string fecInicio, string fecFinal, string notes)
         {

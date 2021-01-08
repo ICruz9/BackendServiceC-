@@ -119,10 +119,16 @@ $BODY$
 LANGUAGE plpgsql;
 --SELECT * from public.sp_getTasks()
 
+
+
 --Funcion que obtiene un tarea especifica
-CREATE OR REPLACE FUNCTION sp_getTasksByID
+CREATE OR REPLACE FUNCTION sp_getTasksByFilter
 (
-	IN vi_idTask INT,
+	IN vi_idPeople INT,
+    IN vi_stateTask VARCHAR(10),
+    IN vi_priority VARCHAR(5),
+    IN vi_fecha_inicio DATE,
+    IN vi_fecha_final DATE,
 	OUT v_idTask INT,
     OUT v_description VARCHAR(150),
     OUT v_idPeople INT,
@@ -134,13 +140,82 @@ CREATE OR REPLACE FUNCTION sp_getTasksByID
 )
   RETURNS SETOF record AS
 $BODY$
-
+DECLARE
 BEGIN
-	RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task WHERE idtask=vi_idtask; 
+	IF (vi_idpeople=0)
+	THEN
+		IF (vi_fecha_inicio='1000-01-01' OR vi_fecha_final='1000-01-01')
+		THEN
+			IF (vi_stateTask='0')
+			THEN
+				IF (vi_priority='0')
+				THEN
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task ;
+				ELSE
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE  priority = vi_priority;
+				END IF;
+			ELSE
+				RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+				WHERE  priority = vi_priority AND statetask = vi_stateTask;
+			END IF;	
+		ELSE
+			IF (vi_stateTask='0')
+			THEN
+				IF (vi_priority='0')
+				THEN
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final ;
+				ELSE
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE  priority = vi_priority AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final;
+				END IF;
+			ELSE
+				RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+				WHERE  priority = vi_priority AND statetask = vi_stateTask AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final;
+			END IF;
+		END IF;	
+		
+	ELSE
+		IF (vi_fecha_inicio='1000-01-01' OR vi_fecha_final='1000-01-01')
+		THEN
+			IF (vi_stateTask='0')
+			THEN
+				IF (vi_priority='0')
+				THEN
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE idpeoplefk=vi_idPeople;
+				ELSE
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE idpeoplefk=vi_idPeople AND priority = vi_priority;
+				END IF;
+			ELSE
+				RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+				WHERE idpeoplefk=vi_idPeople AND priority = vi_priority AND statetask = vi_stateTask;
+			END IF;	
+		ELSE
+			IF (vi_stateTask='0')
+			THEN
+				IF (vi_priority='0')
+				THEN
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE idpeoplefk=vi_idPeople AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final;
+				ELSE
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE idpeoplefk=vi_idPeople AND priority = vi_priority AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final;
+				END IF;
+			ELSE
+				RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+				WHERE idpeoplefk=vi_idPeople AND priority = vi_priority AND statetask = vi_stateTask AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final;
+			END IF;
+		END IF;	
+	END IF;
+	
 END;
 $BODY$
 LANGUAGE plpgsql;
---SELECT * from public.sp_getTasksByID(6)
+
+
 
 --Funcion que obtiene todas las personas
 CREATE OR REPLACE FUNCTION sp_getPeople
