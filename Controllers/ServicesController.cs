@@ -112,8 +112,8 @@ namespace BackendServices.Controllers
                         idPeople = Int32.Parse(reader["v_idpeople"].ToString()),
                         stateTask = reader["v_statetask"].ToString(),
                         priority = reader["v_priority"].ToString(),
-                        fechaInicio = reader["v_fecha_inicio"].ToString(),
-                        fechaFinal = reader["v_fecha_final"].ToString(),
+                        fechaInicio = reader["v_fecha_inicio"].ToString().Substring(0, 10),
+                        fechaFinal = reader["v_fecha_final"].ToString().Substring(0, 10),
                         notes = reader["v_notes"].ToString()
                     });
                 }
@@ -144,8 +144,8 @@ namespace BackendServices.Controllers
                         idPeople = Int32.Parse(reader["v_idpeople"].ToString()),
                         stateTask = reader["v_statetask"].ToString(),
                         priority = reader["v_priority"].ToString(),
-                        fechaInicio = reader["v_fecha_inicio"].ToString(),
-                        fechaFinal = reader["v_fecha_final"].ToString(),
+                        fechaInicio = reader["v_fecha_inicio"].ToString().Substring(0, 10),
+                        fechaFinal = reader["v_fecha_final"].ToString().Substring(0, 10),
                         notes = reader["v_notes"].ToString()
                     };
                 }
