@@ -98,7 +98,7 @@ LANGUAGE plpgsql;
 --Funcion que obtiene todas las tareas
 CREATE OR REPLACE FUNCTION sp_getTasks
 (
-	OUT v_idTask INT,
+    OUT v_idTask INT,
     OUT v_description VARCHAR(150),
     OUT v_idPeople VARCHAR(40),
     OUT v_stateTask VARCHAR(10),
@@ -113,7 +113,7 @@ $BODY$
 BEGIN
 
 	RETURN query SELECT idtask,description,tp.namePeople,statetask,priority,fecha_inicio,fecha_final,notes FROM task INNER JOIN
-	people AS tp ON tp.idPeople=idpeopleFK;
+	people AS tp ON tp.idPeople=idpeopleFK ORDER BY fecha_inicio ASC;
 END;
 $BODY$
 LANGUAGE plpgsql;
@@ -150,14 +150,20 @@ BEGIN
 			THEN
 				IF (vi_priority='0')
 				THEN
-					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task ;
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task ORDER BY fecha_inicio ASC ;
 				ELSE
 					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
-					WHERE  priority = vi_priority;
+					WHERE  priority = vi_priority ORDER BY fecha_inicio ASC;
 				END IF;
 			ELSE
-				RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
-				WHERE  priority = vi_priority AND statetask = vi_stateTask;
+				IF (vi_priority='0')
+				THEN
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task
+					WHERE statetask=vi_stateTask ORDER BY fecha_inicio ASC ;
+				ELSE
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE  priority = vi_priority AND statetask=vi_stateTasky ORDER BY fecha_inicio ASC;
+				END IF;
 			END IF;	
 		ELSE
 			IF (vi_stateTask='0')
@@ -165,14 +171,20 @@ BEGIN
 				IF (vi_priority='0')
 				THEN
 					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
-					WHERE fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final ;
+					WHERE fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final ORDER BY fecha_inicio ASC;
 				ELSE
 					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
-					WHERE  priority = vi_priority AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final;
+					WHERE  priority = vi_priority AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final ORDER BY fecha_inicio ASC;
 				END IF;
 			ELSE
-				RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
-				WHERE  priority = vi_priority AND statetask = vi_stateTask AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final;
+				IF (vi_priority='0')
+				THEN
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE statetask=vi_stateTask AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final ORDER BY fecha_inicio ASC;
+				ELSE
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE statetask=vi_stateTask AND priority = vi_priority AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final ORDER BY fecha_inicio ASC;
+				END IF;	
 			END IF;
 		END IF;	
 		
@@ -184,14 +196,20 @@ BEGIN
 				IF (vi_priority='0')
 				THEN
 					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
-					WHERE idpeoplefk=vi_idPeople;
+					WHERE idpeoplefk=vi_idPeople ORDER BY fecha_inicio ASC;
 				ELSE
 					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
-					WHERE idpeoplefk=vi_idPeople AND priority = vi_priority;
+					WHERE idpeoplefk=vi_idPeople AND priority = vi_priority ORDER BY fecha_inicio ASC;
 				END IF;
 			ELSE
-				RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
-				WHERE idpeoplefk=vi_idPeople AND priority = vi_priority AND statetask = vi_stateTask;
+				IF (vi_priority='0')
+				THEN
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE statetask=vi_stateTask AND idpeoplefk=vi_idPeople ORDER BY fecha_inicio ASC;
+				ELSE
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE  statetask=vi_stateTask AND idpeoplefk=vi_idPeople AND priority = vi_priority ORDER BY fecha_inicio ASC;
+				END IF;
 			END IF;	
 		ELSE
 			IF (vi_stateTask='0')
@@ -199,14 +217,20 @@ BEGIN
 				IF (vi_priority='0')
 				THEN
 					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
-					WHERE idpeoplefk=vi_idPeople AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final;
+					WHERE idpeoplefk=vi_idPeople AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final ORDER BY fecha_inicio ASC;
 				ELSE
 					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
-					WHERE idpeoplefk=vi_idPeople AND priority = vi_priority AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final;
+					WHERE idpeoplefk=vi_idPeople AND priority = vi_priority AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final ORDER BY fecha_inicio ASC;
 				END IF;
 			ELSE
-				RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
-				WHERE idpeoplefk=vi_idPeople AND priority = vi_priority AND statetask = vi_stateTask AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final;
+				IF (vi_priority='0')
+				THEN
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE statetask=vi_stateTask AND idpeoplefk=vi_idPeople AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final ORDER BY fecha_inicio ASC;
+				ELSE
+					RETURN query SELECT idtask,description,idpeoplefk,statetask,priority,fecha_inicio,fecha_final,notes FROM task 
+					WHERE statetask=vi_stateTask AND idpeoplefk=vi_idPeople AND priority = vi_priority AND fecha_inicio>=vi_fecha_inicio AND fecha_final<= vi_fecha_final ORDER BY fecha_inicio ASC;
+				END IF;	
 			END IF;
 		END IF;	
 	END IF;
@@ -214,7 +238,6 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql;
-
 
 
 --Funcion que obtiene todas las personas
